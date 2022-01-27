@@ -4,15 +4,15 @@ defmodule Days do
     exercises
     |> Enum.with_index()
     |> Enum.map(fn {exercise, indx} -> ExerciseSet.add_todo_date(exercise, Date.add(start_date, indx * gap)) end)
-    |> deal_with_weekends(include_weekends)
+    |> deal_with_weekends(gap, include_weekends)
   end
 
-  def deal_with_weekends(dated_schedule, true) do
+  def deal_with_weekends(dated_schedule, _gap, true) do
     dated_schedule
   end
 
-  def deal_with_weekends(dated_schedule, false) do
-    {ds, _offset} = correct_for_weekends(dated_schedule)
+  def deal_with_weekends(dated_schedule, gap, false) do
+    {ds, _offset} = correct_for_weekends(dated_schedule, gap)
     ds
   end
 
@@ -37,13 +37,13 @@ defmodule Days do
 #    |> correct_for_weekends()
 #  end
 
-  def correct_for_weekends(schedule) do
+  def correct_for_weekends(schedule, gap) do
     schedule
-    |> Enum.reduce({[], 0}, fn schedule, {past_schedules, acc} -> calc_date_offset(schedule, {past_schedules, acc}) end)
+    |> Enum.reduce({[], 0}, fn schedule, {past_schedules, acc} -> calc_date_offset(schedule, {past_schedules, acc}, gap) end)
   end
 
 #  Catch case when we start on a Weekend
-  def calc_date_offset(schedule, {[], 0}) do
+  def calc_date_offset(schedule, {[], 0}, _gap) do
     case Date.day_of_week(schedule.todo_date) do
       7 -> {[ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, 1))], 1}
       6 -> {[ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, 2))], 2}
@@ -51,13 +51,22 @@ defmodule Days do
       end
     end
 
-  def calc_date_offset(schedule, {past_schedules, acc}) do
-    new_acc = change_acc(Date.add(schedule.todo_date, acc), acc)
+  def calc_date_offset(schedule, {past_schedules, acc}, gap) do
+    new_acc = change_acc(Date.add(schedule.todo_date, acc), acc, gap)
     {past_schedules ++ [ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, new_acc))], new_acc }
   end
 
-  def change_acc(date, acc) do
+#  We don't want to double account for Sat and Sunday
+  def change_acc(date, acc, 1) do
     case Date.day_of_week(date) do
+      6 -> acc + 2
+      _ -> acc
+    end
+  end
+
+  def change_acc(date, acc, gap) do
+    case Date.day_of_week(date) do
+      7 -> acc + 1
       6 -> acc + 2
       _ -> acc
     end

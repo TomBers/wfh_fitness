@@ -11,9 +11,15 @@
       <root url="file://$PROJECT_DIR$/_build/dev/lib/sobelow/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/sobelow/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/sobelow/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/sobelow/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/sobelow/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/sobelow/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/sobelow/ebin" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/sobelow/lib" />
+      <root url="file://$PROJECT_DIR$/deps/sobelow/lib" />
       <root url="file://$PROJECT_DIR$/deps/sobelow/lib" />
       <root url="file://$PROJECT_DIR$/deps/sobelow/lib" />
       <root url="file://$PROJECT_DIR$/deps/sobelow/lib" />
