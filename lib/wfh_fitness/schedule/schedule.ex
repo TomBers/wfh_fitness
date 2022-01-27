@@ -13,9 +13,9 @@ defmodule Schedule do
 
   def gen_dates(exercises) do
     today = Date.utc_today()
-    exercises
-    |> Enum.with_index()
-    |> Enum.map(fn {exercise, indx} -> ExerciseSet.add_todo_date(exercise, Date.add(today, indx)) end)
+    include_weekends = false
+    gap = 2
+    Days.gen_dates(today, exercises, gap, include_weekends)
   end
 
   def gen_program(exercises, reps, max_weight, weight_divisions, continuous_days) do
