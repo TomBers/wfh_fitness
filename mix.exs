@@ -56,6 +56,7 @@ defmodule WfhFitness.MixProject do
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.8", only: :dev},
       {:ecto_psql_extras, "~> 0.7"},
+      {:timex, "~> 3.5"}
     ]
   end
 
