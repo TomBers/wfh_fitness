@@ -9,22 +9,22 @@ defmodule CalendarDayComponent do
     <td {%{"phx-click" => "pick-date", "phx-value-date" => @day.date, "class" => @day_class}}>
       <%= Timex.format!(@day.date, "%d", :strftime) %>
       <%= if @day.program do %>
-        <p>.</p>
+        <p>💪</p>
         <%= if is_selected(@day.date, @selected_date) do %>
-          <table class="table-fixed">
-            <thead>
+          <table class="min-w-full shadow-md rounded">
+            <thead class="bg-gray-50">
               <tr>
-                <th>Exercise</th>
-                <th>Reps</th>
-                <th>Weight</th>
+                <th class="p-4 text-left font-bold">Exercise</th>
+                <th class="p-4 text-left font-bold">Reps</th>
+                <th class="p-4 text-left font-bold">Weight</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-300">
               <%= for exercise <- @day.program.exercises do %>
                 <tr>
-                  <td><%= exercise.name %></td>
-                  <td><%= exercise.reps %></td>
-                  <td><%= exercise.weight %></td> </tr>
+                  <td class="p-4"><%= exercise.name %></td>
+                  <td class="p-4"><%= exercise.reps %></td>
+                  <td class="p-4"><%= exercise.weight %></td> </tr>
               <% end %>
             </tbody>
           </table>
