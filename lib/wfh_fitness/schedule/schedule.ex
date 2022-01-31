@@ -6,7 +6,7 @@ defmodule Schedule do
   @continuous_days 2
 
   def gen_schedule(today, gap, include_weekends) do
-    exercises = gen_program(@exercises, @reps, @max_weight, @weight_divisions, gap)
+    exercises = gen_program(@exercises, @reps, @max_weight, @weight_divisions, @continuous_days)
 
     Days.gen_dates(today, exercises, gap, include_weekends)
   end

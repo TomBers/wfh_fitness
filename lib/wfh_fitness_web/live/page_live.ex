@@ -5,9 +5,9 @@ defmodule WfhFitnessWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    current_date = Timex.now
+    current_date = Date.utc_today()
 
-    schedule = Schedule.gen_schedule(Date.utc_today(), 2, false)
+    schedule = Schedule.gen_schedule(current_date, 2, false)
 
     assigns = [
       conn: socket,
@@ -45,7 +45,18 @@ defmodule WfhFitnessWeb.PageLive do
   end
 
   def handle_event("prev-month", _, socket) do
-    current_date = Timex.shift(socket.assigns.current_date, months: -1)
+    current_date = Date.add(socket.assigns.current_date, -31) |> Date.beginning_of_month()
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date, socket.assigns.schedule)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("today", _, socket) do
+    current_date = Date.utc_today()
 
     assigns = [
       current_date: current_date,
@@ -56,8 +67,7 @@ defmodule WfhFitnessWeb.PageLive do
   end
 
   def handle_event("next-month", _, socket) do
-    current_date = Timex.shift(socket.assigns.current_date, months: 1)
-
+    current_date = Date.add(socket.assigns.current_date, 31) |> Date.beginning_of_month()
     assigns = [
       current_date: current_date,
       week_rows: week_rows(current_date, socket.assigns.schedule)
