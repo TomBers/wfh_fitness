@@ -40,7 +40,7 @@ defmodule WfhFitnessWeb.PageLive do
       |> Timex.end_of_week(@week_start_at)
 
     Timex.Interval.new(from: first, until: last)
-    |> Enum.map(& %{date: &1, program: Schedule.get_program(&1, schedule)})
+    |> Enum.map(& %{date: NaiveDateTime.to_date(&1), program: Schedule.get_program(&1, schedule)})
     |> Enum.chunk_every(7)
   end
 

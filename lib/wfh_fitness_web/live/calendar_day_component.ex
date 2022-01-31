@@ -6,7 +6,7 @@ defmodule CalendarDayComponent do
     assigns = Map.put(assigns, :day_class, day_class(assigns))
 
     ~H"""
-    <td {%{"phx-click" => "pick-date", "phx-value-date" => Timex.format!(@day.date, "%Y-%m-%d", :strftime), "class" => @day_class}}>
+    <td {%{"phx-click" => "pick-date", "phx-value-date" => @day.date, "class" => @day_class}}>
       <%= Timex.format!(@day.date, "%d", :strftime) %>
       <%= if @day.program do %>
         <p>.</p>
@@ -52,15 +52,15 @@ defmodule CalendarDayComponent do
   end
 
   defp is_selected(ndt, selected_date) do
-    NaiveDateTime.to_date(ndt) == selected_date
+    ndt == selected_date
   end
 
   defp current_date?(assigns) do
-    Map.take(assigns.day.date, [:year, :month, :day]) == Map.take(assigns.current_date, [:year, :month, :day])
+    assigns.day.date == assigns.current_date
   end
 
   defp today?(assigns) do
-    Map.take(assigns.day.date, [:year, :month, :day]) == Map.take(Timex.now, [:year, :month, :day])
+    assigns.day.date == Date.utc_today()
   end
 
   defp other_month?(assigns) do
