@@ -7,11 +7,15 @@ defmodule WfhFitnessWeb.PageLive do
   def mount(_params, _session, socket) do
     current_date = Timex.now
 
+    schedule = Schedule.gen_schedule(Date.utc_today(), 2, false)
+
     assigns = [
       conn: socket,
       current_date: current_date,
+      selected_date: nil,
       day_names: day_names(@week_start_at),
-      week_rows: week_rows(current_date)
+      week_rows: week_rows(current_date, schedule),
+      schedule: schedule
     ]
 
     {:ok, assign(socket, assigns)}
@@ -24,7 +28,7 @@ defmodule WfhFitnessWeb.PageLive do
        do: [1, 2, 3, 4, 5, 6, 7]
            |> Enum.map(&Timex.day_shortname/1)
 
-  defp week_rows(current_date) do
+  defp week_rows(current_date, schedule) do
     first =
       current_date
       |> Timex.beginning_of_month()
@@ -36,7 +40,7 @@ defmodule WfhFitnessWeb.PageLive do
       |> Timex.end_of_week(@week_start_at)
 
     Timex.Interval.new(from: first, until: last)
-    |> Enum.map(& &1)
+    |> Enum.map(& %{date: &1, program: Schedule.get_program(&1, schedule)})
     |> Enum.chunk_every(7)
   end
 
@@ -45,7 +49,7 @@ defmodule WfhFitnessWeb.PageLive do
 
     assigns = [
       current_date: current_date,
-      week_rows: week_rows(current_date)
+      week_rows: week_rows(current_date, socket.assigns.schedule)
     ]
 
     {:noreply, assign(socket, assigns)}
@@ -56,15 +60,20 @@ defmodule WfhFitnessWeb.PageLive do
 
     assigns = [
       current_date: current_date,
-      week_rows: week_rows(current_date)
+      week_rows: week_rows(current_date, socket.assigns.schedule)
     ]
 
     {:noreply, assign(socket, assigns)}
   end
 
-  def handle_event("pick-date", params, socket) do
-    IO.inspect(params)
-    {:noreply, socket}
+  def handle_event("pick-date", %{"date" => date}, socket) do
+    new_selected_date =
+      if is_nil(socket.assigns.selected_date) do
+        Date.from_iso8601!(date)
+        else
+        nil
+      end
+    {:noreply, assign(socket, selected_date: new_selected_date)}
   end
 
   @impl true

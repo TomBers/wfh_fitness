@@ -20,7 +20,7 @@ defmodule CalendarLive do
             <%= for week <- @week_rows do %>
             <tr>
                 <%= for day <- week do %>
-                 <.live_component module={CalendarDayComponent} day={day} current_date={@current_date} id={Enum.random(1..40000)} />
+                 <.live_component module={CalendarDayComponent} day={day} selected_date={@selected_date} current_date={@current_date} id={Enum.random(1..40000)} />
                 <% end %>
             </tr>
             <% end %>
