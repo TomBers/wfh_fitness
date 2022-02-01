@@ -1,9 +1,89 @@
 defmodule WfhFitnessWeb.PageLive do
   use WfhFitnessWeb, :live_view
 
+  @week_start_at :mon
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    current_date = Date.utc_today()
+
+    schedule = Schedule.gen_schedule(current_date, 2, false)
+
+    assigns = [
+      conn: socket,
+      current_date: current_date,
+      selected_date: nil,
+      day_names: day_names(@week_start_at),
+      week_rows: week_rows(current_date, schedule),
+      schedule: schedule
+    ]
+
+    {:ok, assign(socket, assigns)}
+  end
+
+  defp day_names(:sun),
+       do: [7, 1, 2, 3, 4, 5, 6]
+           |> Enum.map(&Timex.day_shortname/1)
+  defp day_names(_),
+       do: [1, 2, 3, 4, 5, 6, 7]
+           |> Enum.map(&Timex.day_shortname/1)
+
+  defp week_rows(current_date, schedule) do
+    first =
+      current_date
+      |> Timex.beginning_of_month()
+      |> Timex.beginning_of_week(@week_start_at)
+
+    last =
+      current_date
+      |> Timex.end_of_month()
+      |> Timex.end_of_week(@week_start_at)
+
+    Timex.Interval.new(from: first, until: last)
+    |> Enum.map(& %{date: NaiveDateTime.to_date(&1), program: Schedule.get_program(&1, schedule)})
+    |> Enum.chunk_every(7)
+  end
+
+  def handle_event("prev-month", _, socket) do
+    current_date = Date.add(socket.assigns.current_date, -31) |> Date.beginning_of_month()
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date, socket.assigns.schedule)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("today", _, socket) do
+    current_date = Date.utc_today()
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date, socket.assigns.schedule)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("next-month", _, socket) do
+    current_date = Date.add(socket.assigns.current_date, 31) |> Date.beginning_of_month()
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date, socket.assigns.schedule)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("pick-date", %{"date" => date}, socket) do
+    new_selected_date =
+      if is_nil(socket.assigns.selected_date) do
+        Date.from_iso8601!(date)
+        else
+        nil
+      end
+    {:noreply, assign(socket, selected_date: new_selected_date)}
   end
 
   @impl true

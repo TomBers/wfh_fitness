@@ -5,17 +5,27 @@ defmodule Schedule do
   @weight_divisions 0.5
   @continuous_days 2
 
+  def gen_schedule(today, gap, include_weekends) do
+    exercises = gen_program(@exercises, @reps, @max_weight, @weight_divisions, @continuous_days)
+
+    Days.gen_dates(today, exercises, gap, include_weekends)
+  end
+
+  def get_program(ndt, schedule) do
+    date = NaiveDateTime.to_date(ndt)
+    Enum.find(schedule, fn s -> s.todo_date == date end)
+  end
+
   def run do
     program = gen_program(@exercises, @reps, @max_weight, @weight_divisions, @continuous_days)
-
     program |> gen_dates()
   end
 
   def gen_dates(exercises) do
     today = Date.utc_today()
-    exercises
-    |> Enum.with_index()
-    |> Enum.map(fn {exercise, indx} -> ExerciseSet.add_todo_date(exercise, Date.add(today, indx)) end)
+    include_weekends = false
+    gap = 2
+    Days.gen_dates(today, exercises, gap, include_weekends)
   end
 
   def gen_program(exercises, reps, max_weight, weight_divisions, continuous_days) do
