@@ -4,21 +4,21 @@ defmodule Days do
     exercises
     |> Enum.with_index()
     |> Enum.map(fn {exercise, indx} -> ExerciseSet.add_todo_date(exercise, Date.add(start_date, indx * gap)) end)
-    |> correct_for_missed_daya(missed_days)
+    |> correct_for_missed_days(missed_days)
     |> deal_with_weekends(gap, include_weekends)
   end
 
-  def correct_for_missed_daya(schedule, []) do
+  def correct_for_missed_days(schedule, []) do
     schedule
   end
 
-  def correct_for_missed_daya(schedule, missed_days) do
+  def correct_for_missed_days(schedule, missed_days) do
     {corrected_schedules, _acc} =
       schedule
-    |> Enum.reduce(
-         {[], 0},
-         fn schedule, {past_schedules, acc} -> calc_missed_offset(schedule, {past_schedules, acc}, missed_days) end
-       )
+      |> Enum.reduce(
+           {[], 0},
+           fn schedule, {past_schedules, acc} -> calc_missed_offset(schedule, {past_schedules, acc}, missed_days) end
+         )
     corrected_schedules
   end
 

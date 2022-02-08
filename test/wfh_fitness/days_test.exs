@@ -115,6 +115,17 @@ defmodule WfhFitness.DaysTest do
       last = List.last(schedule)
       assert last.todo_date == ~D[2022-01-10]
     end
+
+    test "missing a day shifts every exercise back excluding weekends" do
+      exercises = gen_exercises(7)
+      today = ~D[2022-01-03]
+      missed = ~D[2022-01-04]
+      schedule = Days.gen_dates(today, exercises, 1, false, [missed])
+
+      last = List.last(schedule)
+      assert last.todo_date == ~D[2022-01-12]
+    end
+
   end
 
 
