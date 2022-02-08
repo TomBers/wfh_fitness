@@ -2,12 +2,14 @@ defmodule WfhFitnessWeb.PageLive do
   use WfhFitnessWeb, :live_view
 
   @week_start_at :mon
+  @include_weekends true
+  @day_gap 1
 
   @impl true
   def mount(_params, _session, socket) do
     current_date = Date.utc_today()
 
-    schedule = Schedule.gen_schedule(current_date, 2, false)
+    schedule = Schedule.gen_schedule(current_date, @day_gap, @include_weekends, [])
 
     assigns = [
       conn: socket,
@@ -15,6 +17,7 @@ defmodule WfhFitnessWeb.PageLive do
       selected_date: nil,
       day_names: day_names(@week_start_at),
       week_rows: week_rows(current_date, schedule),
+      skipped_days: [],
       schedule: schedule
     ]
 
@@ -84,6 +87,21 @@ defmodule WfhFitnessWeb.PageLive do
         nil
       end
     {:noreply, assign(socket, selected_date: new_selected_date)}
+  end
+
+  def handle_event("skip-day", %{"date" => date_str}, socket) do
+    current_date = Date.utc_today()
+    date = Date.from_iso8601!(date_str)
+
+    skipped_days = socket.assigns.skipped_days ++ [date]
+
+    schedule = Schedule.gen_schedule(current_date, @day_gap, @include_weekends, skipped_days)
+    assigns = [
+      week_rows: week_rows(current_date, schedule),
+      skipped_days: skipped_days,
+      schedule: schedule
+    ]
+    {:noreply, assign(socket, assigns)}
   end
 
   @impl true

@@ -5,10 +5,10 @@ defmodule Schedule do
   @weight_divisions 0.5
   @continuous_days 2
 
-  def gen_schedule(today, gap, include_weekends) do
+  def gen_schedule(today, gap, include_weekends, skipped_days \\ []) do
     exercises = gen_program(@exercises, @reps, @max_weight, @weight_divisions, @continuous_days)
 
-    Days.gen_dates(today, exercises, gap, include_weekends)
+    Days.gen_dates(today, exercises, gap, include_weekends, skipped_days)
   end
 
   def get_program(ndt, schedule) do

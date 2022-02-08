@@ -11,6 +11,7 @@ defmodule CalendarDayComponent do
       <%= if @day.program do %>
         <p>💪</p>
         <%= if is_selected(@day.date, @selected_date) do %>
+          <button {%{"phx-click" => "skip-day", "phx-value-date" => @day.date, "class" => "btn"}}>Skip</button>
           <table class="min-w-full shadow-md rounded">
             <thead class="bg-gray-50">
               <tr>
@@ -60,6 +61,7 @@ defmodule CalendarDayComponent do
 
   defp other_month?(assigns) do
 #      Map.take(assigns.day.date, [:month, :year]) != Map.take(assigns.current_date, [:month, :year])
-    assigns.day.date.month != assigns.current_date.month
+#    assigns.day.date.month != assigns.current_date.month
+      false
   end
 end
