@@ -105,6 +105,39 @@ defmodule WfhFitness.DaysTest do
     end
   end
 
+  describe "missing a day moves everything back" do
+    test "missing a day shifts every exercise back including weekends" do
+      exercises = gen_exercises(7)
+      today = ~D[2022-01-03]
+      missed = ~D[2022-01-04]
+      schedule = Days.gen_dates(today, exercises, 1, true, [missed])
+
+      last = List.last(schedule)
+      assert last.todo_date == ~D[2022-01-10]
+    end
+
+    test "missing a day shifts every exercise back excluding weekends" do
+      exercises = gen_exercises(7)
+      today = ~D[2022-01-03]
+      missed = ~D[2022-01-04]
+      schedule = Days.gen_dates(today, exercises, 1, false, [missed])
+
+      last = List.last(schedule)
+      assert last.todo_date == ~D[2022-01-12]
+    end
+
+    test "missing multipledays a day shifts every exercise back including weekends" do
+      exercises = gen_exercises(7)
+      today = ~D[2022-01-03]
+      missed = [~D[2022-01-04], ~D[2022-01-06]]
+      schedule = Days.gen_dates(today, exercises, 1, true, missed)
+
+      last = List.last(schedule)
+      assert last.todo_date == ~D[2022-01-11]
+    end
+
+  end
+
 
   def gen_exercises(n) do
     1..n |> Enum.map(fn _x -> %ExerciseSet{exercises: [@exercise]} end)
