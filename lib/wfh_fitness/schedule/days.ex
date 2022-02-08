@@ -29,7 +29,8 @@ defmodule Days do
       else
         acc
       end
-    {past_schedules ++ [ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, new_acc))], new_acc}
+
+    {past_schedules ++ [ ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, new_acc)) ], new_acc}
   end
 
   def deal_with_weekends(dated_schedule, _gap, true) do
@@ -40,27 +41,6 @@ defmodule Days do
     {ds, _offset} = correct_for_weekends(dated_schedule, gap)
     ds
   end
-
-
-  #  def gen_continuous() do
-  #    today = ~D[2022-01-08] #Date.utc_today()
-  #    1..7
-  #    |> Enum.with_index()
-  #    |> Enum.map(fn {_exercise, indx} -> Date.add(today, indx) end)
-  #  end
-  #
-  #  def gen_gap() do
-  #    today = Date.utc_today()
-  #    gap = 2
-  #    1..7
-  #    |> Enum.with_index()
-  #    |> Enum.map(fn {_exercise, indx} -> Date.add(today, indx * gap) end)
-  #  end
-  #
-  #  def gen_weekends do
-  #    gen_continuous()
-  #    |> correct_for_weekends()
-  #  end
 
   def correct_for_weekends(schedule, gap) do
     schedule
@@ -92,7 +72,7 @@ defmodule Days do
     end
   end
 
-  def change_acc(date, acc, gap) do
+  def change_acc(date, acc, _gap) do
     case Date.day_of_week(date) do
       7 -> acc + 1
       6 -> acc + 2
