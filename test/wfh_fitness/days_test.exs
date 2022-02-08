@@ -110,7 +110,7 @@ defmodule WfhFitness.DaysTest do
       exercises = gen_exercises(7)
       today = ~D[2022-01-03]
       missed = ~D[2022-01-04]
-      schedule = Days.gen_dates(today, exercises, 1, true, [missed])
+      schedule = Days.gen_dates(today, exercises, 1, true, MapSet.new([missed]))
 
       last = List.last(schedule)
       assert last.todo_date == ~D[2022-01-10]
@@ -120,7 +120,7 @@ defmodule WfhFitness.DaysTest do
       exercises = gen_exercises(7)
       today = ~D[2022-01-03]
       missed = ~D[2022-01-04]
-      schedule = Days.gen_dates(today, exercises, 1, false, [missed])
+      schedule = Days.gen_dates(today, exercises, 1, false, MapSet.new([missed]))
 
       last = List.last(schedule)
       assert last.todo_date == ~D[2022-01-12]
@@ -130,7 +130,7 @@ defmodule WfhFitness.DaysTest do
       exercises = gen_exercises(7)
       today = ~D[2022-01-03]
       missed = [~D[2022-01-04], ~D[2022-01-06]]
-      schedule = Days.gen_dates(today, exercises, 1, true, missed)
+      schedule = Days.gen_dates(today, exercises, 1, true, MapSet.new(missed))
 
       last = List.last(schedule)
       assert last.todo_date == ~D[2022-01-11]
