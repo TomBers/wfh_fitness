@@ -24,6 +24,10 @@ defmodule GenProgram do
     %{"Pressups" => 1, "Situps" => 2, "Pullups" => 3}
   end
 
+  def reps do
+    1..12
+  end
+
   def exercises_index(n) do
     {val, idx} = Enum.find(exercises(), fn {k, v} -> v == n end)
     val
