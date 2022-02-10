@@ -35,6 +35,7 @@ defmodule WfhFitness.Schedules do
       ** (Ecto.NoResultsError)
 
   """
+  def get_program(id), do: Repo.get(Program, id)
   def get_program!(id), do: Repo.get!(Program, id)
 
   @doc """

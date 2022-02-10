@@ -8,7 +8,7 @@ defmodule WfhFitnessWeb.PageLive do
   @impl true
   def mount(_params, _session, socket) do
     current_date = Date.utc_today()
-    schedule = GenProgram.gen(WfhFitness.Schedules.get_program!(1))
+    schedule = GenProgram.gen(WfhFitness.Schedules.get_program(1))
 
 
     assigns = [
