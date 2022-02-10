@@ -1,0 +1,44 @@
+<h1>Listing Programs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Start date</th>
+      <th>Day gap</th>
+      <th>Max weight</th>
+      <th>Weight increments</th>
+      <th>Repeat count</th>
+      <th>Reps</th>
+      <th>Include weekends</th>
+      <th>Missed days</th>
+      <th>Exercises</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for program <- @programs do %>
+    <tr>
+      <td><%= program.name %></td>
+      <td><%= program.start_date %></td>
+      <td><%= program.day_gap %></td>
+      <td><%= program.max_weight %></td>
+      <td><%= program.weight_increments %></td>
+      <td><%= program.repeat_count %></td>
+      <td><%= program.reps %></td>
+      <td><%= program.include_weekends %></td>
+      <td><%= program.missed_days %></td>
+      <td><%= program.exercises %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.program_path(@conn, :show, program) %></span>
+        <span><%= link "Edit", to: Routes.program_path(@conn, :edit, program) %></span>
+        <span><%= link "Delete", to: Routes.program_path(@conn, :delete, program), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Program", to: Routes.program_path(@conn, :new) %></span>

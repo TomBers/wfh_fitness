@@ -1,0 +1,58 @@
+<h1>Show Program</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @program.name %>
+  </li>
+
+  <li>
+    <strong>Start date:</strong>
+    <%= @program.start_date %>
+  </li>
+
+  <li>
+    <strong>Day gap:</strong>
+    <%= @program.day_gap %>
+  </li>
+
+  <li>
+    <strong>Max weight:</strong>
+    <%= @program.max_weight %>
+  </li>
+
+  <li>
+    <strong>Weight increments:</strong>
+    <%= @program.weight_increments %>
+  </li>
+
+  <li>
+    <strong>Repeat count:</strong>
+    <%= @program.repeat_count %>
+  </li>
+
+  <li>
+    <strong>Reps:</strong>
+    <%= @program.reps %>
+  </li>
+
+  <li>
+    <strong>Include weekends:</strong>
+    <%= @program.include_weekends %>
+  </li>
+
+  <li>
+    <strong>Missed days:</strong>
+    <%= @program.missed_days %>
+  </li>
+
+  <li>
+    <strong>Exercises:</strong>
+    <%= @program.exercises %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.program_path(@conn, :edit, @program) %></span> |
+<span><%= link "Back", to: Routes.program_path(@conn, :index) %></span>
