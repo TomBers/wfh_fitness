@@ -2,7 +2,7 @@ defmodule WfhFitnessWeb.PageLive do
   use WfhFitnessWeb, :live_view
 
   @week_start_at :mon
-  @include_weekends true
+  @include_weekends false
   @day_gap 1
 
   @impl true
@@ -17,7 +17,7 @@ defmodule WfhFitnessWeb.PageLive do
       selected_date: nil,
       day_names: day_names(@week_start_at),
       week_rows: week_rows(current_date, schedule),
-      skipped_days: [],
+      skipped_days: MapSet.new(),
       schedule: schedule
     ]
 
@@ -93,9 +93,9 @@ defmodule WfhFitnessWeb.PageLive do
     current_date = Date.utc_today()
     date = Date.from_iso8601!(date_str)
 
-    skipped_days = socket.assigns.skipped_days ++ [date]
-
+    skipped_days = socket.assigns.skipped_days |> MapSet.put(date)
     schedule = Schedule.gen_schedule(current_date, @day_gap, @include_weekends, skipped_days)
+
     assigns = [
       week_rows: week_rows(current_date, schedule),
       skipped_days: skipped_days,

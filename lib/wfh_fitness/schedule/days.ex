@@ -23,14 +23,24 @@ defmodule Days do
   end
 
   def calc_missed_offset(schedule, {past_schedules, acc}, missed_days) do
-    new_acc =
-      if Enum.any?(missed_days, fn day -> day == schedule.todo_date end) do
-        acc + 1
-      else
-        acc
-      end
+#    Already missed days
+    target_date = calc_target_date(schedule.todo_date, MapSet.to_list(missed_days))
+
+    new_acc = Enum.count(missed_days, fn day -> day <= target_date end)
 
     {past_schedules ++ [ ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, new_acc)) ], new_acc}
+  end
+
+  def calc_target_date(t_date, []) do
+    t_date
+  end
+
+  def calc_target_date(t_date, [h | t]) do
+      if h <= t_date do
+        calc_target_date(Date.add(t_date, 1), t)
+        else
+        calc_target_date(t_date, t)
+      end
   end
 
   def deal_with_weekends(dated_schedule, _gap, true) do
