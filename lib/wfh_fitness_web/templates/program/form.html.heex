@@ -34,7 +34,7 @@
   <%= error_tag f, :reps %>
 
   <%= label f, :exercises %>
-  <%= multiple_select f, :exercises,  ["Pressups": 1, "Situps": 2], class: "input input-bordered" %>
+  <%= multiple_select f, :exercises,  GenProgram.exercises, class: "input input-bordered" %>
   <%= error_tag f, :exercises %>
 
   <div>

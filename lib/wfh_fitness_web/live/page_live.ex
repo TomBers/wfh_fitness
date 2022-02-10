@@ -7,6 +7,11 @@ defmodule WfhFitnessWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
+
+
+    program = GenProgram.gen(WfhFitness.Schedules.get_program!(1))
+    IO.inspect(program)
+
     current_date = Date.utc_today()
 
     schedule = Schedule.gen_schedule(current_date, @day_gap, @include_weekends, [])
