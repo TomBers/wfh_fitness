@@ -1,0 +1,1 @@
+mix phx.gen.html Schedules Program programs start_date:date day_gap:integer max_weight:integer weight_increments:integer repeat_count:integer reps:array:integer include_weekends:boolean missed_days:array:date exercises:array:integer

@@ -19,6 +19,7 @@ defmodule WfhFitnessWeb.Router do
 
   scope "/", WfhFitnessWeb do
     pipe_through :browser
+    resources "/programs", ProgramController
 
     live "/", PageLive, :index
   end
