@@ -34,7 +34,7 @@
 
   <li>
     <strong>Reps:</strong>
-    <%= @program.reps %>
+    <%= Jason.encode!(@program.reps) %>
   </li>
 
   <li>
@@ -43,13 +43,8 @@
   </li>
 
   <li>
-    <strong>Missed days:</strong>
-    <%= @program.missed_days %>
-  </li>
-
-  <li>
     <strong>Exercises:</strong>
-    <%= @program.exercises %>
+    <%= @program.exercises |> GenProgram.lookup_exercises() |> Jason.encode!() %>
   </li>
 
 </ul>

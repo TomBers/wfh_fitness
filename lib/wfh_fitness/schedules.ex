@@ -74,6 +74,18 @@ defmodule WfhFitness.Schedules do
     |> Repo.update()
   end
 
+  def add_missed_date(%Program{} = program, new_date) do
+    update_program(program, %{missed_days: new_missed_days(program.missed_days, new_date) })
+  end
+
+  defp new_missed_days(nil, new_date) do
+    [new_date]
+  end
+
+  defp new_missed_days(dates, new_date) do
+    MapSet.new(dates) |> MapSet.put(new_date) |> MapSet.to_list()
+  end
+
   @doc """
   Deletes a program.
 

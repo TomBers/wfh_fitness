@@ -8,8 +8,8 @@ defmodule WfhFitnessWeb.PageLive do
   @impl true
   def mount(_params, _session, socket) do
     current_date = Date.utc_today()
-    schedule = GenProgram.gen(WfhFitness.Schedules.get_program(1))
-
+    program = WfhFitness.Schedules.get_program(1)
+    schedule = program |> GenProgram.gen()
 
     assigns = [
       conn: socket,
@@ -17,8 +17,8 @@ defmodule WfhFitnessWeb.PageLive do
       selected_date: nil,
       day_names: day_names(@week_start_at),
       week_rows: week_rows(current_date, schedule),
-      skipped_days: MapSet.new(),
-      schedule: schedule
+      schedule: schedule,
+      program: program
     ]
 
     {:ok, assign(socket, assigns)}
@@ -90,16 +90,16 @@ defmodule WfhFitnessWeb.PageLive do
   end
 
   def handle_event("skip-day", %{"date" => date_str}, socket) do
+#    TODO: Store skipped days in Db, and then get new schedule (get and update??)
     current_date = Date.utc_today()
     date = Date.from_iso8601!(date_str)
 
-    skipped_days = socket.assigns.skipped_days |> MapSet.put(date)
-    schedule = Schedule.gen_schedule(current_date, @day_gap, @include_weekends, skipped_days)
+#    TODO - this does not return the updated program need to see if there is a way to update and get in 1 query
+    {:ok, program} = WfhFitness.Schedules.add_missed_date(socket.assigns.program, date)
 
     assigns = [
-      week_rows: week_rows(current_date, schedule),
-      skipped_days: skipped_days,
-      schedule: schedule
+      program: program,
+      schedule: program |> GenProgram.gen()
     ]
     {:noreply, assign(socket, assigns)}
   end

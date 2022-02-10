@@ -24,7 +24,7 @@ defmodule Days do
 
   def calc_missed_offset(schedule, {past_schedules, acc}, missed_days) do
 #    Already missed days
-    target_date = calc_target_date(schedule.todo_date, MapSet.to_list(missed_days))
+    target_date = calc_target_date(schedule.todo_date, missed_days)
 
     new_acc = Enum.count(missed_days, fn day -> day <= target_date end)
 

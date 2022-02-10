@@ -26,10 +26,9 @@
       <td><%= program.max_weight %></td>
       <td><%= program.weight_increments %></td>
       <td><%= program.repeat_count %></td>
-      <td><%= program.reps %></td>
+      <td><%= program.reps |> Jason.encode!() %></td>
       <td><%= program.include_weekends %></td>
-      <td><%= program.missed_days %></td>
-      <td><%= program.exercises %></td>
+      <td><%= program.exercises |> GenProgram.lookup_exercises() |> Jason.encode!() %></td>
 
       <td>
         <span><%= link "Show", to: Routes.program_path(@conn, :show, program) %></span>
