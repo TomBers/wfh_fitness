@@ -75,7 +75,7 @@ defmodule WfhFitness.Schedules do
   end
 
   def add_missed_date(%Program{} = program, new_date) do
-    update_program(program, %{missed_days: new_missed_days(program.missed_days, new_date) })
+    update_program(program, %{missed_days: new_missed_days(program.missed_days, new_date)})
   end
 
   defp new_missed_days(nil, new_date) do

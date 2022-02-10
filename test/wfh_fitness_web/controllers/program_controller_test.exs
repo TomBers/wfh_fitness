@@ -3,9 +3,42 @@ defmodule WfhFitnessWeb.ProgramControllerTest do
 
   import WfhFitness.SchedulesFixtures
 
-  @create_attrs %{day_gap: 42, exercises: [], include_weekends: true, max_weight: 42, missed_days: [], name: "some name", repeat_count: 42, reps: [], start_date: ~D[2022-02-09], weight_increments: 42}
-  @update_attrs %{day_gap: 43, exercises: [], include_weekends: false, max_weight: 43, missed_days: [], name: "some updated name", repeat_count: 43, reps: [], start_date: ~D[2022-02-10], weight_increments: 43}
-  @invalid_attrs %{day_gap: nil, exercises: nil, include_weekends: nil, max_weight: nil, missed_days: nil, name: nil, repeat_count: nil, reps: nil, start_date: nil, weight_increments: nil}
+  @create_attrs %{
+    day_gap: 42,
+    exercises: [],
+    include_weekends: true,
+    max_weight: 42,
+    missed_days: [],
+    name: "some name",
+    repeat_count: 42,
+    reps: [],
+    start_date: ~D[2022-02-09],
+    weight_increments: 42
+  }
+  @update_attrs %{
+    day_gap: 43,
+    exercises: [],
+    include_weekends: false,
+    max_weight: 43,
+    missed_days: [],
+    name: "some updated name",
+    repeat_count: 43,
+    reps: [],
+    start_date: ~D[2022-02-10],
+    weight_increments: 43
+  }
+  @invalid_attrs %{
+    day_gap: nil,
+    exercises: nil,
+    include_weekends: nil,
+    max_weight: nil,
+    missed_days: nil,
+    name: nil,
+    repeat_count: nil,
+    reps: nil,
+    start_date: nil,
+    weight_increments: nil
+  }
 
   describe "index" do
     test "lists all programs", %{conn: conn} do

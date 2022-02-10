@@ -1,9 +1,10 @@
 defmodule Days do
-
   def gen_dates(start_date, exercises, gap \\ 1, include_weekends \\ true, missed_days \\ []) do
     exercises
     |> Enum.with_index()
-    |> Enum.map(fn {exercise, indx} -> ExerciseSet.add_todo_date(exercise, Date.add(start_date, indx * gap)) end)
+    |> Enum.map(fn {exercise, indx} ->
+      ExerciseSet.add_todo_date(exercise, Date.add(start_date, indx * gap))
+    end)
     |> correct_for_missed_days(missed_days)
     |> deal_with_weekends(gap, include_weekends)
   end
@@ -16,19 +17,23 @@ defmodule Days do
     {corrected_schedules, _acc} =
       schedule
       |> Enum.reduce(
-           {[], 0},
-           fn schedule, {past_schedules, acc} -> calc_missed_offset(schedule, {past_schedules, acc}, missed_days) end
-         )
+        {[], 0},
+        fn schedule, {past_schedules, acc} ->
+          calc_missed_offset(schedule, {past_schedules, acc}, missed_days)
+        end
+      )
+
     corrected_schedules
   end
 
   def calc_missed_offset(schedule, {past_schedules, acc}, missed_days) do
-#    Already missed days
+    #    Already missed days
     target_date = calc_target_date(schedule.todo_date, missed_days)
 
     new_acc = Enum.count(missed_days, fn day -> day <= target_date end)
 
-    {past_schedules ++ [ ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, new_acc)) ], new_acc}
+    {past_schedules ++
+       [ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, new_acc))], new_acc}
   end
 
   def calc_target_date(t_date, []) do
@@ -36,11 +41,11 @@ defmodule Days do
   end
 
   def calc_target_date(t_date, [h | t]) do
-      if h <= t_date do
-        calc_target_date(Date.add(t_date, 1), t)
-        else
-        calc_target_date(t_date, t)
-      end
+    if h <= t_date do
+      calc_target_date(Date.add(t_date, 1), t)
+    else
+      calc_target_date(t_date, t)
+    end
   end
 
   def deal_with_weekends(dated_schedule, _gap, true) do
@@ -55,9 +60,11 @@ defmodule Days do
   def correct_for_weekends(schedule, gap) do
     schedule
     |> Enum.reduce(
-         {[], 0},
-         fn schedule, {past_schedules, acc} -> calc_date_offset(schedule, {past_schedules, acc}, gap) end
-       )
+      {[], 0},
+      fn schedule, {past_schedules, acc} ->
+        calc_date_offset(schedule, {past_schedules, acc}, gap)
+      end
+    )
   end
 
   #  Catch case when we start on a Weekend
@@ -71,7 +78,9 @@ defmodule Days do
 
   def calc_date_offset(schedule, {past_schedules, acc}, gap) do
     new_acc = change_acc(Date.add(schedule.todo_date, acc), acc, gap)
-    {past_schedules ++ [ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, new_acc))], new_acc}
+
+    {past_schedules ++
+       [ExerciseSet.add_todo_date(schedule, Date.add(schedule.todo_date, new_acc))], new_acc}
   end
 
   #  We don't want to double account for Sat and Sunday
@@ -89,5 +98,4 @@ defmodule Days do
       _ -> acc
     end
   end
-
 end

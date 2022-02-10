@@ -20,7 +20,28 @@ defmodule WfhFitness.Schedules.Program do
   @doc false
   def changeset(program, attrs) do
     program
-    |> cast(attrs, [:name, :start_date, :day_gap, :max_weight, :weight_increments, :repeat_count, :reps, :include_weekends, :missed_days, :exercises])
-    |> validate_required([:name, :start_date, :day_gap, :max_weight, :weight_increments, :repeat_count, :reps, :include_weekends, :exercises])
+    |> cast(attrs, [
+      :name,
+      :start_date,
+      :day_gap,
+      :max_weight,
+      :weight_increments,
+      :repeat_count,
+      :reps,
+      :include_weekends,
+      :missed_days,
+      :exercises
+    ])
+    |> validate_required([
+      :name,
+      :start_date,
+      :day_gap,
+      :max_weight,
+      :weight_increments,
+      :repeat_count,
+      :reps,
+      :include_weekends,
+      :exercises
+    ])
   end
 end

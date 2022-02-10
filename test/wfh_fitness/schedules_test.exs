@@ -8,7 +8,18 @@ defmodule WfhFitness.SchedulesTest do
 
     import WfhFitness.SchedulesFixtures
 
-    @invalid_attrs %{day_gap: nil, exercises: nil, include_weekends: nil, max_weight: nil, missed_days: nil, name: nil, repeat_count: nil, reps: nil, start_date: nil, weight_increments: nil}
+    @invalid_attrs %{
+      day_gap: nil,
+      exercises: nil,
+      include_weekends: nil,
+      max_weight: nil,
+      missed_days: nil,
+      name: nil,
+      repeat_count: nil,
+      reps: nil,
+      start_date: nil,
+      weight_increments: nil
+    }
 
     test "list_programs/0 returns all programs" do
       program = program_fixture()
@@ -21,7 +32,18 @@ defmodule WfhFitness.SchedulesTest do
     end
 
     test "create_program/1 with valid data creates a program" do
-      valid_attrs = %{day_gap: 42, exercises: [], include_weekends: true, max_weight: 42, missed_days: [], name: "some name", repeat_count: 42, reps: [], start_date: ~D[2022-02-09], weight_increments: 42}
+      valid_attrs = %{
+        day_gap: 42,
+        exercises: [],
+        include_weekends: true,
+        max_weight: 42,
+        missed_days: [],
+        name: "some name",
+        repeat_count: 42,
+        reps: [],
+        start_date: ~D[2022-02-09],
+        weight_increments: 42
+      }
 
       assert {:ok, %Program{} = program} = Schedules.create_program(valid_attrs)
       assert program.day_gap == 42
@@ -42,7 +64,19 @@ defmodule WfhFitness.SchedulesTest do
 
     test "update_program/2 with valid data updates the program" do
       program = program_fixture()
-      update_attrs = %{day_gap: 43, exercises: [], include_weekends: false, max_weight: 43, missed_days: [], name: "some updated name", repeat_count: 43, reps: [], start_date: ~D[2022-02-10], weight_increments: 43}
+
+      update_attrs = %{
+        day_gap: 43,
+        exercises: [],
+        include_weekends: false,
+        max_weight: 43,
+        missed_days: [],
+        name: "some updated name",
+        repeat_count: 43,
+        reps: [],
+        start_date: ~D[2022-02-10],
+        weight_increments: 43
+      }
 
       assert {:ok, %Program{} = program} = Schedules.update_program(program, update_attrs)
       assert program.day_gap == 43
