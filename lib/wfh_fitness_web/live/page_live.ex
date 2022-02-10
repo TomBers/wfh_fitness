@@ -102,12 +102,9 @@ defmodule WfhFitnessWeb.PageLive do
   end
 
   def handle_event("skip-day", %{"date" => date_str}, socket) do
-    #    TODO: Store skipped days in Db, and then get new schedule (get and update??)
     current_date = Date.utc_today()
-    date = Date.from_iso8601!(date_str)
 
-    #    TODO - this does not return the updated program need to see if there is a way to update and get in 1 query
-    {:ok, program} = WfhFitness.Schedules.add_missed_date(socket.assigns.program, date)
+    {:ok, program} = WfhFitness.Schedules.add_missed_date(socket.assigns.program, Date.from_iso8601!(date_str))
 
     schedule =
       program
