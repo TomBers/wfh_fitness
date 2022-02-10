@@ -96,10 +96,12 @@ defmodule WfhFitnessWeb.PageLive do
 
 #    TODO - this does not return the updated program need to see if there is a way to update and get in 1 query
     {:ok, program} = WfhFitness.Schedules.add_missed_date(socket.assigns.program, date)
+    schedule = program |> GenProgram.gen()
 
     assigns = [
       program: program,
-      schedule: program |> GenProgram.gen()
+      week_rows: week_rows(current_date, schedule),
+      schedule: schedule
     ]
     {:noreply, assign(socket, assigns)}
   end
