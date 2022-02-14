@@ -19,7 +19,7 @@ defmodule CalendarLive do
             <%= for week <- @week_rows do %>
             <tr>
                 <%= for day <- week do %>
-                 <.live_component module={CalendarDayComponent} day={day} selected_date={@selected_date} day_class={day_class(day, @current_date, @missed_days)} id={day.date} />
+                 <.live_component module={CalendarDayComponent} day={day} selected_date={@selected_date} day_class={day_class(day, @current_date, @program)} id={day.date} />
                 <% end %>
             </tr>
             <% end %>
@@ -29,12 +29,12 @@ defmodule CalendarLive do
     """
   end
 
-  defp day_class(day, current_date, missed_days) do
+  defp day_class(day, current_date, program) do
     cond do
       today?(day) ->
         "text-xs p-2 text-gray-600 border border-gray-200 bg-green-200 hover:bg-green-300 cursor-pointer"
 
-      missed?(day, missed_days) ->
+      missed?(day, program) ->
         "text-xs p-2 border border-gray-200 bg-red-200 cursor-not-allowed"
 
       other_month?(day, current_date) ->
@@ -49,8 +49,12 @@ defmodule CalendarLive do
     day.date == Date.utc_today()
   end
 
-  defp missed?(day, missed_days) do
-    Enum.any?(missed_days, fn missed -> missed == day.date end)
+  defp missed?(_day, nil) do
+    false
+  end
+
+  defp missed?(day, program) do
+    Enum.any?(program.missed_days, fn missed -> missed == day.date end)
   end
 
   defp other_month?(day, current_date) do

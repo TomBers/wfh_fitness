@@ -8,4 +8,4 @@
         <a href="#" phx-click="next-month" class="inline-block text-sm bg-white p-2 rounded shadow text-gray-600 border border-gray-200">&raquo; Next</a>
     </div>
 </div>
-<.live_component module={CalendarLive} selected_date={@selected_date} current_date={@current_date} day_names={@day_names} week_rows={@week_rows} missed_days={@program.missed_days} id="cal" />
+<.live_component module={CalendarLive} selected_date={@selected_date} current_date={@current_date} day_names={@day_names} week_rows={@week_rows} program={@program} id="cal" />
