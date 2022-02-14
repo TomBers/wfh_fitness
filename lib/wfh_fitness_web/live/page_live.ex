@@ -53,19 +53,6 @@ defmodule WfhFitnessWeb.PageLive do
     |> Enum.chunk_every(7)
   end
 
-  def handle_event("prev-month", _, socket) do
-    current_date =
-      Date.add(socket.assigns.current_date, -31)
-      |> Date.beginning_of_month()
-
-    assigns = [
-      current_date: current_date,
-      week_rows: week_rows(current_date, socket.assigns.schedule)
-    ]
-
-    {:noreply, assign(socket, assigns)}
-  end
-
   def handle_event("today", _, socket) do
     current_date = Date.utc_today()
 
@@ -79,8 +66,19 @@ defmodule WfhFitnessWeb.PageLive do
 
   def handle_event("next-month", _, socket) do
     current_date =
-      Date.add(socket.assigns.current_date, 31)
-      |> Date.beginning_of_month()
+      Date.add(Date.end_of_month(socket.assigns.current_date), 1)
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date, socket.assigns.schedule)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("prev-month", _, socket) do
+    current_date =
+      Date.add(Date.beginning_of_month(socket.assigns.current_date), -1)
 
     assigns = [
       current_date: current_date,
