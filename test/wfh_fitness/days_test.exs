@@ -12,19 +12,18 @@ defmodule WfhFitness.DaysTest do
     end
 
     test "test starting a saturday for a week with no gaps including weekends" do
-      exercises =  gen_exercises(7)
+      exercises = gen_exercises(7)
       today = ~D[2022-01-08]
       schedule = Days.gen_dates(today, exercises)
       assert_simple_week(schedule, today)
     end
 
     test "test starting a sunday for a week with no gaps including weekends" do
-      exercises =  gen_exercises(7)
+      exercises = gen_exercises(7)
       today = ~D[2022-01-09]
       schedule = Days.gen_dates(today, exercises)
       assert_simple_week(schedule, today)
     end
-
   end
 
   describe "schedule with gaps" do
@@ -37,7 +36,7 @@ defmodule WfhFitness.DaysTest do
     end
 
     test "test starting a saturday for a week every other day including weekends" do
-      exercises =  gen_exercises(7)
+      exercises = gen_exercises(7)
       today = ~D[2022-01-08]
       schedule = Days.gen_dates(today, exercises, 2)
       last_date = assert_gap_of_2(schedule, today)
@@ -45,7 +44,7 @@ defmodule WfhFitness.DaysTest do
     end
 
     test "test starting a sunday for a week every other day including weekends" do
-      exercises =  gen_exercises(7)
+      exercises = gen_exercises(7)
       today = ~D[2022-01-09]
       schedule = Days.gen_dates(today, exercises, 2)
       last_date = assert_gap_of_2(schedule, today)
@@ -63,7 +62,7 @@ defmodule WfhFitness.DaysTest do
     end
 
     test "test starting a saturday for a week with no gaps excluding weekends" do
-      exercises =  gen_exercises(7)
+      exercises = gen_exercises(7)
       today = ~D[2022-01-08]
       schedule = Days.gen_dates(today, exercises, 1, false)
       last = List.last(schedule)
@@ -71,7 +70,7 @@ defmodule WfhFitness.DaysTest do
     end
 
     test "test starting a sunday for a week with no gaps excluding weekends" do
-      exercises =  gen_exercises(7)
+      exercises = gen_exercises(7)
       today = ~D[2022-01-09]
       schedule = Days.gen_dates(today, exercises, 1, false)
       last = List.last(schedule)
@@ -89,7 +88,7 @@ defmodule WfhFitness.DaysTest do
     end
 
     test "test starting a saturday for a week every other day excluding weekends" do
-      exercises =  gen_exercises(7)
+      exercises = gen_exercises(7)
       today = ~D[2022-01-08]
       schedule = Days.gen_dates(today, exercises, 2, false)
       last = List.last(schedule)
@@ -97,7 +96,7 @@ defmodule WfhFitness.DaysTest do
     end
 
     test "test starting a sunday for a week every other day excluding weekends" do
-      exercises =  gen_exercises(7)
+      exercises = gen_exercises(7)
       today = ~D[2022-01-09]
       schedule = Days.gen_dates(today, exercises, 2, false)
       last = List.last(schedule)
@@ -110,7 +109,7 @@ defmodule WfhFitness.DaysTest do
       exercises = gen_exercises(7)
       today = ~D[2022-01-03]
       missed = ~D[2022-01-04]
-      schedule = Days.gen_dates(today, exercises, 1, true, MapSet.new([missed]))
+      schedule = Days.gen_dates(today, exercises, 1, true, [missed])
 
       last = List.last(schedule)
       assert last.todo_date == ~D[2022-01-10]
@@ -120,7 +119,7 @@ defmodule WfhFitness.DaysTest do
       exercises = gen_exercises(7)
       today = ~D[2022-01-03]
       missed = ~D[2022-01-04]
-      schedule = Days.gen_dates(today, exercises, 1, false, MapSet.new([missed]))
+      schedule = Days.gen_dates(today, exercises, 1, false, [missed])
 
       last = List.last(schedule)
       assert last.todo_date == ~D[2022-01-12]
@@ -130,14 +129,12 @@ defmodule WfhFitness.DaysTest do
       exercises = gen_exercises(7)
       today = ~D[2022-01-03]
       missed = [~D[2022-01-04], ~D[2022-01-06]]
-      schedule = Days.gen_dates(today, exercises, 1, true, MapSet.new(missed))
+      schedule = Days.gen_dates(today, exercises, 1, true, missed)
 
       last = List.last(schedule)
       assert last.todo_date == ~D[2022-01-11]
     end
-
   end
-
 
   def gen_exercises(n) do
     1..n |> Enum.map(fn _x -> %ExerciseSet{exercises: [@exercise]} end)
@@ -159,5 +156,4 @@ defmodule WfhFitness.DaysTest do
     assert last.todo_date == Date.add(today, 12)
     last.todo_date
   end
-
 end

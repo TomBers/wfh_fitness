@@ -1,6 +1,8 @@
 defmodule Schedule do
-  @exercises ["Pullups"] #, "Pressups", "Squats", "Step squats"]
-  @reps [4]#, 5, 6, 7, 8]
+  # , "Pressups", "Squats", "Step squats"]
+  @exercises ["Pullups"]
+  # , 5, 6, 7, 8]
+  @reps [4]
   @max_weight 2
   @weight_divisions 1
   @continuous_days 1
@@ -16,23 +18,25 @@ defmodule Schedule do
     Enum.find(schedule, fn s -> s.todo_date == date end)
   end
 
-#  def run do
-#    program = gen_program(@exercises, @reps, @max_weight, @weight_divisions, @continuous_days)
-#    program |> gen_dates()
-#  end
-#
-#  def gen_dates(exercises) do
-#    today = Date.utc_today()
-#    include_weekends = false
-#    gap = 2
-#    Days.gen_dates(today, exercises, gap, include_weekends)
-#  end
+  #  def run do
+  #    program = gen_program(@exercises, @reps, @max_weight, @weight_divisions, @continuous_days)
+  #    program |> gen_dates()
+  #  end
+  #
+  #  def gen_dates(exercises) do
+  #    today = Date.utc_today()
+  #    include_weekends = false
+  #    gap = 2
+  #    Days.gen_dates(today, exercises, gap, include_weekends)
+  #  end
 
   def gen_program(exercises, reps, max_weight, weight_divisions, continuous_days) do
     weight_steps = floor(max_weight / weight_divisions)
 
     1..weight_steps
-    |> Enum.flat_map(fn weight -> add_for_weight(exercises, reps, weight_divisions * weight, continuous_days) end)
+    |> Enum.flat_map(fn weight ->
+      add_for_weight(exercises, reps, weight_divisions * weight, continuous_days)
+    end)
   end
 
   def add_for_weight(exercises, reps, weight, continuous_days) do
@@ -48,5 +52,4 @@ defmodule Schedule do
   def make_exercises(exercises, reps, weight) do
     Enum.map(exercises, fn ex -> %Exercise{name: ex, reps: reps, weight: weight} end)
   end
-
 end

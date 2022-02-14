@@ -2,7 +2,6 @@ defmodule CalendarLive do
   use Phoenix.LiveComponent
   use Timex
 
-
   def render(assigns) do
     ~H"""
     <div class="container">
@@ -29,5 +28,4 @@ defmodule CalendarLive do
     </div>
     """
   end
-
 end

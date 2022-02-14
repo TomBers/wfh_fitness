@@ -14,7 +14,7 @@ defmodule WfhFitness.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: WfhFitness.PubSub},
       # Start the Endpoint (http/https)
-      WfhFitnessWeb.Endpoint,
+      WfhFitnessWeb.Endpoint
       # Start a worker by calling: WfhFitness.Worker.start_link(arg)
       # {WfhFitness.Worker, arg}
     ]

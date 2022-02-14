@@ -8,8 +8,11 @@ defmodule WfhFitnessWeb.PageLive do
   @impl true
   def mount(_params, _session, socket) do
     current_date = Date.utc_today()
+    program = WfhFitness.Schedules.get_program(1)
 
-    schedule = Schedule.gen_schedule(current_date, @day_gap, @include_weekends, [])
+    schedule =
+      program
+      |> GenProgram.gen()
 
     assigns = [
       conn: socket,
@@ -17,19 +20,22 @@ defmodule WfhFitnessWeb.PageLive do
       selected_date: nil,
       day_names: day_names(@week_start_at),
       week_rows: week_rows(current_date, schedule),
-      skipped_days: MapSet.new(),
-      schedule: schedule
+      schedule: schedule,
+      program: program
     ]
 
     {:ok, assign(socket, assigns)}
   end
 
   defp day_names(:sun),
-       do: [7, 1, 2, 3, 4, 5, 6]
-           |> Enum.map(&Timex.day_shortname/1)
+    do:
+      [7, 1, 2, 3, 4, 5, 6]
+      |> Enum.map(&Timex.day_shortname/1)
+
   defp day_names(_),
-       do: [1, 2, 3, 4, 5, 6, 7]
-           |> Enum.map(&Timex.day_shortname/1)
+    do:
+      [1, 2, 3, 4, 5, 6, 7]
+      |> Enum.map(&Timex.day_shortname/1)
 
   defp week_rows(current_date, schedule) do
     first =
@@ -43,12 +49,14 @@ defmodule WfhFitnessWeb.PageLive do
       |> Timex.end_of_week(@week_start_at)
 
     Timex.Interval.new(from: first, until: last)
-    |> Enum.map(& %{date: NaiveDateTime.to_date(&1), program: Schedule.get_program(&1, schedule)})
+    |> Enum.map(&%{date: NaiveDateTime.to_date(&1), program: Schedule.get_program(&1, schedule)})
     |> Enum.chunk_every(7)
   end
 
   def handle_event("prev-month", _, socket) do
-    current_date = Date.add(socket.assigns.current_date, -31) |> Date.beginning_of_month()
+    current_date =
+      Date.add(socket.assigns.current_date, -31)
+      |> Date.beginning_of_month()
 
     assigns = [
       current_date: current_date,
@@ -70,7 +78,10 @@ defmodule WfhFitnessWeb.PageLive do
   end
 
   def handle_event("next-month", _, socket) do
-    current_date = Date.add(socket.assigns.current_date, 31) |> Date.beginning_of_month()
+    current_date =
+      Date.add(socket.assigns.current_date, 31)
+      |> Date.beginning_of_month()
+
     assigns = [
       current_date: current_date,
       week_rows: week_rows(current_date, socket.assigns.schedule)
@@ -83,24 +94,28 @@ defmodule WfhFitnessWeb.PageLive do
     new_selected_date =
       if is_nil(socket.assigns.selected_date) do
         Date.from_iso8601!(date)
-        else
+      else
         nil
       end
+
     {:noreply, assign(socket, selected_date: new_selected_date)}
   end
 
   def handle_event("skip-day", %{"date" => date_str}, socket) do
     current_date = Date.utc_today()
-    date = Date.from_iso8601!(date_str)
 
-    skipped_days = socket.assigns.skipped_days |> MapSet.put(date)
-    schedule = Schedule.gen_schedule(current_date, @day_gap, @include_weekends, skipped_days)
+    {:ok, program} = WfhFitness.Schedules.add_missed_date(socket.assigns.program, Date.from_iso8601!(date_str))
+
+    schedule =
+      program
+      |> GenProgram.gen()
 
     assigns = [
+      program: program,
       week_rows: week_rows(current_date, schedule),
-      skipped_days: skipped_days,
       schedule: schedule
     ]
+
     {:noreply, assign(socket, assigns)}
   end
 
@@ -116,10 +131,12 @@ defmodule WfhFitnessWeb.PageLive do
         {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
 
       _ ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-         |> assign(results: %{}, query: query)}
+        {
+          :noreply,
+          socket
+          |> put_flash(:error, "No dependencies found matching \"#{query}\"")
+          |> assign(results: %{}, query: query)
+        }
     end
   end
 
