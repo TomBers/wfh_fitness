@@ -1,45 +1,57 @@
 <h1>Listing Programs</h1>
+<div class="flex flex-col mt-8">
+    <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div class="inline-block min-w-full overflow-hidden align-middle shadow sm:rounded-lg">
+            <table class="min-w-full">
+                <thead>
+                <tr>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Name</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Start date</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Day gap</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Max weight</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Weight increments</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Repeat count</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Reps</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Include weekends</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50">Exercises</th>
+                    <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase  bg-gray-50"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <%= for program <- @programs do %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-no-wrap">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.name %></div></td>
+                    <td class="px-6 py-4 whitespace-no-wrap ">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.start_date %></div></td>
+                    <td class="px-6 py-4 whitespace-no-wrap ">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.day_gap %></div></td>
+                    <td class="px-6 py-4 whitespace-no-wrap ">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.max_weight %></div></td>
+                    <td class="px-6 py-4 whitespace-no-wrap ">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.weight_increments %></div></td>
+                    <td class="px-6 py-4 whitespace-no-wrap ">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.repeat_count %></div></td>
+                    <td class="px-6 py-4 whitespace-no-wrap ">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.reps |> Jason.encode!() %></div></td>
+                    <td class="px-6 py-4 whitespace-no-wrap ">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.include_weekends %></div></td>
+                    <td class="px-6 py-4 whitespace-no-wrap ">
+                    <div class="text-sm leading-5 text-gray-500"><%= program.exercises |> GenProgram.lookup_exercises() |> Jason.encode!() %></div></td>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Start date</th>
-      <th>Day gap</th>
-      <th>Max weight</th>
-      <th>Weight increments</th>
-      <th>Repeat count</th>
-      <th>Reps</th>
-      <th>Include weekends</th>
-      <th>Missed days</th>
-      <th>Exercises</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for program <- @programs do %>
-    <tr>
-      <td><%= program.name %></td>
-      <td><%= program.start_date %></td>
-      <td><%= program.day_gap %></td>
-      <td><%= program.max_weight %></td>
-      <td><%= program.weight_increments %></td>
-      <td><%= program.repeat_count %></td>
-      <td><%= program.reps |> Jason.encode!() %></td>
-      <td><%= program.include_weekends %></td>
-      <td><%= program.exercises |> GenProgram.lookup_exercises() |> Jason.encode!() %></td>
-
-      <td>
-        <span><%= link "Show", to: Routes.program_path(@conn, :show, program) %></span>
-        <span><%= link "Edit", to: Routes.program_path(@conn, :edit, program) %></span>
-        <span><%= link "Download", to: Routes.program_path(@conn, :download, program) %></span>
-        <span><%= link "Delete", to: Routes.program_path(@conn, :delete, program), method: :delete, data: [confirm: "Are you sure?"] %></span>
-        <span><%= link "Calendar", to: Routes.calendar_path(@conn, :index, program) %></span>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
+                    <td>
+                        <span><%= link "Show", to: Routes.program_path(@conn, :show, program), class: "text-gray-500 hover:text-white" %></span>
+                        <span><%= link "Edit", to: Routes.program_path(@conn, :edit, program), class: "text-gray-500 hover:text-white" %></span>
+                        <span><%= link "Download", to: Routes.program_path(@conn, :download, program), class: "text-gray-500 hover:text-white" %></span>
+                        <span><%= link "Delete", to: Routes.program_path(@conn, :delete, program), method: :delete, data: [confirm: "Are you sure?"], class: "text-gray-500 hover:text-white" %></span>
+                        <span><%= link "Calendar", to: Routes.calendar_path(@conn, :index, program), class: "text-gray-500 hover:text-white" %></span>
+                    </td>
+                </tr>
+                <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br>
 <span><%= link "New Program", to: Routes.program_path(@conn, :new) %></span>
