@@ -20,7 +20,9 @@ defmodule WfhFitnessWeb.Router do
   scope "/", WfhFitnessWeb do
     pipe_through :browser
     resources "/programs", ProgramController
+
     live "/", PageLive, :index
+    get "/download/cal/:id", ProgramController, :download
   end
 
   # Other scopes may use custom stacks.
