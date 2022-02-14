@@ -4,16 +4,16 @@ defmodule CalendarDayComponent do
 
   def render(assigns) do
     ~H"""
-    <div {%{"phx-click" => "pick-date", "phx-value-date" => @day.date}}>
+    <div {%{"phx-click" => "pick-date", "phx-value-date" => @day.date, "class" => "text-right"}}>
       <%= Timex.format!(@day.date, "%d", :strftime) %>
       <%= if @day.program do %>
-        <p>💪</p>
+        <span>💪</span>
         <%= if is_selected(@day.date, @selected_date) do %>
-          <div class="align-items-end">
+          <div class="">
             <button {%{"phx-click" => "skip-day", "phx-value-date" => @day.date, "class" => "btn btn-sm"}}>Skip</button>
             <button {%{"phx-click" => "pick-date", "phx-value-date" => @day.date, "class" => "btn btn-sm"}}>Close</button>
           </div>
-          <table class="table-fixed">
+          <table class="table-fixed text-left">
             <thead>
               <tr>
                 <th class="p-2 text-left font-bold min-w-[50%]">Exercise</th>

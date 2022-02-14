@@ -5,7 +5,8 @@
     <div>
         <a href="#" phx-click="prev-month" class="inline-block text-sm bg-slate-800 p-2 rounded shadow text-white">&laquo; Prev</a>
         <a href="#" phx-click="today" class="inline-block text-sm bg-slate-800 p-2 rounded shadow text-white">Today</a>
-        <a href="#" phx-click="next-month" class="inline-block text-sm bg-slate-800 p-2 rounded shadow text-white ">&raquo; Next</a>
+        <a href="#" phx-click="next-month" class="inline-block text-sm bg-slate-800 p-2 rounded shadow text-white">&raquo; Next</a>
+        <%= link "Download", to: Routes.program_path(@socket, :download, @program), class: "inline-block text-sm bg-slate-800 p-2 rounded shadow text-white"  %>
     </div>
 </div>
-<.live_component module={Calendar} selected_date={@selected_date} current_date={@current_date} day_names={@day_names} week_rows={@week_rows} program={@program} id="cal" />
+<.live_component module={Cal} selected_date={@selected_date} current_date={@current_date} day_names={@day_names} week_rows={@week_rows} program={@program} id="cal" />

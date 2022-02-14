@@ -1,11 +1,11 @@
-defmodule Calendar do
+defmodule Cal do
   use Phoenix.LiveComponent
   use Timex
 
   def render(assigns) do
     ~H"""
       <div class="container">
-        <div class="grid grid-cols-7">
+        <div class="grid grid-cols-7 text-center">
           <%= for day_name <- @day_names do %>
             <div class="text-lg p-2 text-slate-400 bg-slate-800 border border-gray-200"><%= day_name %></div>
           <% end %>
@@ -27,7 +27,7 @@ defmodule Calendar do
         "text-sm p-2 text-gray-600 border border-gray-200 bg-green-300 hover:bg-green-200 cursor-pointer"
 
       missed?(day, program) ->
-        "text-sm p-2 border border-gray-200 bg-red-200 cursor-not-allowed"
+        "text-sm p-2 border border-gray-200 bg-red-400 cursor-not-allowed"
 
       other_month?(day, current_date) ->
         "text-sm p-2 text-gray-400 border border-gray-200 bg-gray-200 cursor-not-allowed"
