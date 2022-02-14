@@ -54,16 +54,17 @@ defmodule CalendarLive do
   end
 
   defp missed?(day, program) do
-    md = if is_nil(program.missed_days) do
-      []
+    md =
+      if is_nil(program.missed_days) do
+        []
       else
         program.missed_days
-    end
+      end
+
     Enum.any?(md, fn missed -> missed == day.date end)
   end
 
   defp other_month?(day, current_date) do
     Date.compare(Date.beginning_of_month(day.date), Date.beginning_of_month(current_date)) != :eq
   end
-
 end
