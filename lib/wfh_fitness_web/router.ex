@@ -22,6 +22,7 @@ defmodule WfhFitnessWeb.Router do
     resources "/programs", ProgramController
 
     live "/", PageLive, :index
+    live "/calendar/:id", CalendarLive, :index
     get "/download/cal/:id", ProgramController, :download
   end
 

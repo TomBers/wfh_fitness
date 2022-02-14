@@ -35,6 +35,7 @@
         <span><%= link "Edit", to: Routes.program_path(@conn, :edit, program) %></span>
         <span><%= link "Download", to: Routes.program_path(@conn, :download, program) %></span>
         <span><%= link "Delete", to: Routes.program_path(@conn, :delete, program), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        <span><%= link "Calendar", to: Routes.calendar_path(@conn, :index, program) %></span>
       </td>
     </tr>
 <% end %>

@@ -1,70 +1,151 @@
-defmodule CalendarLive do
-  use Phoenix.LiveComponent
-  use Timex
+defmodule WfhFitnessWeb.CalendarLive do
+  use WfhFitnessWeb, :live_view
 
-  def render(assigns) do
-    ~H"""
-    <div class="container">
-        <table class="w-full mt-4 border border-gray-200 rounded-lg shadow-lg">
-            <thead>
-            <tr>
-                <%= for day_name <- @day_names do %>
-                <th class="text-xs p-2 text-gray-600 border border-gray-200">
-                    <%= day_name %>
-                </th>
-                <% end %>
-            </tr>
-            </thead>
-            <tbody>
-            <%= for week <- @week_rows do %>
-            <tr>
-                <%= for day <- week do %>
-                 <.live_component module={CalendarDayComponent} day={day} selected_date={@selected_date} day_class={day_class(day, @current_date, @program)} id={day.date} />
-                <% end %>
-            </tr>
-            <% end %>
-            </tbody>
-        </table>
-    </div>
-    """
+  @week_start_at :mon
+  @include_weekends false
+  @day_gap 1
+
+  @impl true
+  def mount(%{"id" => id}, _session, socket) do
+    current_date = Date.utc_today()
+    program = WfhFitness.Schedules.get_program(id)
+
+    schedule =
+      program
+      |> GenProgram.gen()
+
+    assigns = [
+      conn: socket,
+      current_date: current_date,
+      selected_date: nil,
+      day_names: day_names(@week_start_at),
+      week_rows: week_rows(current_date, schedule),
+      schedule: schedule,
+      program: program
+    ]
+
+    {:ok, assign(socket, assigns)}
   end
 
-  defp day_class(day, current_date, program) do
-    cond do
-      today?(day) ->
-        "text-xs p-2 text-gray-600 border border-gray-200 bg-green-200 hover:bg-green-300 cursor-pointer"
+  defp day_names(:sun),
+    do:
+      [7, 1, 2, 3, 4, 5, 6]
+      |> Enum.map(&Timex.day_shortname/1)
 
-      missed?(day, program) ->
-        "text-xs p-2 border border-gray-200 bg-red-200 cursor-not-allowed"
+  defp day_names(_),
+    do:
+      [1, 2, 3, 4, 5, 6, 7]
+      |> Enum.map(&Timex.day_shortname/1)
 
-      other_month?(day, current_date) ->
-        "text-xs p-2 text-gray-400 border border-gray-200 bg-gray-200 cursor-not-allowed"
+  defp week_rows(current_date, schedule) do
+    first =
+      current_date
+      |> Timex.beginning_of_month()
+      |> Timex.beginning_of_week(@week_start_at)
 
-      true ->
-        "text-xs p-2 text-gray-600 border border-gray-200 bg-white hover:bg-blue-100 cursor-pointer"
+    last =
+      current_date
+      |> Timex.end_of_month()
+      |> Timex.end_of_week(@week_start_at)
+
+    Timex.Interval.new(from: first, until: last)
+    |> Enum.map(&%{date: NaiveDateTime.to_date(&1), program: Schedule.get_program(&1, schedule)})
+    |> Enum.chunk_every(7)
+  end
+
+  def handle_event("today", _, socket) do
+    current_date = Date.utc_today()
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date, socket.assigns.schedule)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("next-month", _, socket) do
+    current_date = Date.add(Date.end_of_month(socket.assigns.current_date), 1)
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date, socket.assigns.schedule)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("prev-month", _, socket) do
+    current_date = Date.add(Date.beginning_of_month(socket.assigns.current_date), -1)
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date, socket.assigns.schedule)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("pick-date", %{"date" => date}, socket) do
+    new_selected_date =
+      if is_nil(socket.assigns.selected_date) do
+        Date.from_iso8601!(date)
+      else
+        nil
+      end
+
+    {:noreply, assign(socket, selected_date: new_selected_date)}
+  end
+
+  def handle_event("skip-day", %{"date" => date_str}, socket) do
+    current_date = Date.utc_today()
+
+    {:ok, program} =
+      WfhFitness.Schedules.add_missed_date(socket.assigns.program, Date.from_iso8601!(date_str))
+
+    schedule =
+      program
+      |> GenProgram.gen()
+
+    assigns = [
+      program: program,
+      week_rows: week_rows(current_date, schedule),
+      schedule: schedule
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  @impl true
+  def handle_event("suggest", %{"q" => query}, socket) do
+    {:noreply, assign(socket, results: search(query), query: query)}
+  end
+
+  @impl true
+  def handle_event("search", %{"q" => query}, socket) do
+    case search(query) do
+      %{^query => vsn} ->
+        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
+
+      _ ->
+        {
+          :noreply,
+          socket
+          |> put_flash(:error, "No dependencies found matching \"#{query}\"")
+          |> assign(results: %{}, query: query)
+        }
     end
   end
 
-  defp today?(day) do
-    day.date == Date.utc_today()
-  end
+  defp search(query) do
+    if not WfhFitnessWeb.Endpoint.config(:code_reloader) do
+      raise "action disabled when not in development"
+    end
 
-  defp missed?(_day, nil) do
-    false
-  end
-
-  defp missed?(day, program) do
-    md =
-      if is_nil(program.missed_days) do
-        []
-      else
-        program.missed_days
-      end
-
-    Enum.any?(md, fn missed -> missed == day.date end)
-  end
-
-  defp other_month?(day, current_date) do
-    Date.compare(Date.beginning_of_month(day.date), Date.beginning_of_month(current_date)) != :eq
+    for {app, desc, vsn} <- Application.started_applications(),
+        app = to_string(app),
+        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
+        into: %{},
+        do: {app, vsn}
   end
 end
