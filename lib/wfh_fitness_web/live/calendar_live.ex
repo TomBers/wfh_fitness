@@ -54,7 +54,12 @@ defmodule CalendarLive do
   end
 
   defp missed?(day, program) do
-    Enum.any?(program.missed_days, fn missed -> missed == day.date end)
+    md = if is_nil(program.missed_days) do
+      []
+      else
+        program.missed_days
+    end
+    Enum.any?(md, fn missed -> missed == day.date end)
   end
 
   defp other_month?(day, current_date) do

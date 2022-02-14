@@ -1,7 +1,7 @@
 defmodule ExportCal do
 
   def gen_cal(n) do
-    program = WfhFitness.Schedules.get_program(1)
+    program = WfhFitness.Schedules.get_program(n)
 
     events =
       program

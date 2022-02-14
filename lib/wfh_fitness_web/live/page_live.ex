@@ -10,6 +10,8 @@ defmodule WfhFitnessWeb.PageLive do
     current_date = Date.utc_today()
     program = WfhFitness.Schedules.get_program(1)
 
+    IO.inspect(program)
+
     schedule =
       program
       |> GenProgram.gen()
