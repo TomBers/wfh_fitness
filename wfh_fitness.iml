@@ -113,6 +113,8 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/tzdata" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/unicode_util_compat" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/ssl_verify_fun" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/icalendar" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/icalendar" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="phoenix" level="project" />
@@ -180,5 +182,7 @@
     <orderEntry type="library" name="tzdata" level="project" />
     <orderEntry type="library" name="combine" level="project" />
     <orderEntry type="library" name="benchfella" level="project" />
+    <orderEntry type="library" name="icalendar" level="project" />
+    <orderEntry type="library" name="mix_test_watch" level="project" />
   </component>
 </module>

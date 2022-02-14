@@ -10,6 +10,8 @@ defmodule WfhFitnessWeb.PageLive do
     current_date = Date.utc_today()
     program = WfhFitness.Schedules.get_program(1)
 
+    IO.inspect(program)
+
     schedule =
       program
       |> GenProgram.gen()
@@ -65,8 +67,7 @@ defmodule WfhFitnessWeb.PageLive do
   end
 
   def handle_event("next-month", _, socket) do
-    current_date =
-      Date.add(Date.end_of_month(socket.assigns.current_date), 1)
+    current_date = Date.add(Date.end_of_month(socket.assigns.current_date), 1)
 
     assigns = [
       current_date: current_date,
@@ -77,8 +78,7 @@ defmodule WfhFitnessWeb.PageLive do
   end
 
   def handle_event("prev-month", _, socket) do
-    current_date =
-      Date.add(Date.beginning_of_month(socket.assigns.current_date), -1)
+    current_date = Date.add(Date.beginning_of_month(socket.assigns.current_date), -1)
 
     assigns = [
       current_date: current_date,
@@ -102,7 +102,8 @@ defmodule WfhFitnessWeb.PageLive do
   def handle_event("skip-day", %{"date" => date_str}, socket) do
     current_date = Date.utc_today()
 
-    {:ok, program} = WfhFitness.Schedules.add_missed_date(socket.assigns.program, Date.from_iso8601!(date_str))
+    {:ok, program} =
+      WfhFitness.Schedules.add_missed_date(socket.assigns.program, Date.from_iso8601!(date_str))
 
     schedule =
       program

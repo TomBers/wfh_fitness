@@ -37,6 +37,10 @@ defmodule WfhFitnessWeb.ProgramController do
     render(conn, "edit.html", program: program, changeset: changeset)
   end
 
+  def download(conn, %{"id" => id}) do
+    send_download(conn, {:binary, ExportCal.gen_cal(id)}, filename: "wfh_fitness_cal.ics")
+  end
+
   def update(conn, %{"id" => id, "program" => program_params}) do
     program = Schedules.get_program!(id)
 

@@ -144,7 +144,6 @@ defmodule WfhFitness.DaysTest do
       last = List.last(schedule)
       assert last.todo_date == ~D[2022-01-11]
     end
-
   end
 
   def gen_exercises(n) do
