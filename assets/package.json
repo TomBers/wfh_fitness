@@ -3,7 +3,7 @@
     "deploy": "NODE_ENV=production postcss css/app.css -o ../priv/static/assets/app.css"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.0",
+    "@tailwindcss/typography": "^0.5.2",
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.5",
     "postcss-cli": "^9.1.0",
